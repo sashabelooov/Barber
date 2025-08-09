@@ -2,6 +2,7 @@ from aiogram.types import KeyboardButton, InlineKeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 import json
 
+from Barber_Telegram_Bot.api import all_barbers_name
 
 
 with open("data.json", "r", encoding="utf-8") as file:
@@ -12,7 +13,7 @@ def get_text(lang, category, key):
 
 def start_key():
     keyboard = ReplyKeyboardBuilder()
-    keyboard.add(KeyboardButton(text=f"🇺🇸 eng"), KeyboardButton(text=f"🇺🇿 uz"),KeyboardButton(text=f"🇷🇺 ru"))
+    keyboard.add(KeyboardButton(text=f"🇺🇿 uz"), KeyboardButton(text=f"🇷🇺 ru"))
     keyboard.adjust(3)
     return keyboard.as_markup(resize_keyboard=True)
 
@@ -52,20 +53,38 @@ def menu(lang):
 
 def language(lang):
     keyboard = ReplyKeyboardBuilder()
-    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'eng')), KeyboardButton(text=get_text(lang, 'buttons', 'uz')),
-                 KeyboardButton(text=get_text(lang, 'buttons', 'ru')),KeyboardButton(text=get_text(lang, 'buttons', 'back')))
-    keyboard.adjust(3)
-    return keyboard.as_markup(resize_keyboard=True)
-
-
-
-def barber_name(lang):
-    keyboard = ReplyKeyboardBuilder()
-    keyboard.add(KeyboardButton(text="Ali"), KeyboardButton(text="Ismoil"),
-                         KeyboardButton(text="Bobur"),KeyboardButton(text="Shoxruh"),
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'uz')),
+                 KeyboardButton(text=get_text(lang, 'buttons', 'ru')),
                  KeyboardButton(text=get_text(lang, 'buttons', 'back')))
-    keyboard.adjust(2)
+    keyboard.adjust(2,1)
     return keyboard.as_markup(resize_keyboard=True)
+
+
+
+# async def barber_name(lang):
+#     keyboard = ReplyKeyboardBuilder()
+#     names = await all_barbers_name()
+#     for i in names:
+#         if 1 in i["roles"]:
+#             keyboard.add(KeyboardButton(text=f'{i["first_name"]}'))
+#     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+#     keyboard.adjust(2,1)
+#     return keyboard.as_markup(resize_keyboard=True)
+
+
+async def barber_name(lang):
+    inline_keyboard = InlineKeyboardBuilder()
+    keyboard = ReplyKeyboardBuilder()
+    names = await all_barbers_name()
+    for i in names:
+        if 1 in i["roles"]:
+            inline_keyboard.add(
+                InlineKeyboardButton(text=f'{i["first_name"]}', callback_data=f'{i["first_name"]}_{i["telegram_id"]}')
+            )
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+    inline_keyboard.adjust(2)
+    keyboard.adjust(1)
+    return inline_keyboard.as_markup(), keyboard.as_markup(resize_keyboard=True)
 
 
 def today_or_another(lang):
