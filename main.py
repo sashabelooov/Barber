@@ -280,55 +280,32 @@ async def check_service_type(message: Message, state: FSMContext):
             await state.update_data(selected_service=message.text)
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'optionforservices'), reply_markup=await kb.type_of_selected_service(lang, barber_id))
-            await state.set_state(UserState.type_of_selected_service)
+            await state.set_state(UserState.date)
 
-    except Exception as e:
-        print(f"Error:{e}")
-
-
-# ////////////////// check_service_type \\\\\\\\\\\\\\\\\\\\\\\
-@router.message(UserState.check_service_type)
-async def check_service_type(message: Message, state: FSMContext):
-    try:
-        user_id = message.from_user.id
-        data = await state.get_data()
-        lang = data['language']
-        if message.text == get_text(lang, "buttons", "back"):
-            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
-            await message.answer(text=get_text(lang, 'message_text', 'barber_name'),reply_markup=await kb.barber_name(lang))
-            await state.set_state(UserState.barber_name)
-        elif message.text in selected_service:
-            barber_id = selected_service[message.text]
-            await state.update_data(optionforservices=message.text)
-            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
-            await message.answer(text=get_text(lang, 'message_text', 'optionforservices'), reply_markup=await kb.type_of_selected_service(lang, barber_id))
-            await state.set_state(UserState.select_date)
 
     except Exception as e:
         print(f"Error:{e}")
 
 
 
-# ////////////////// select_date \\\\\\\\\\\\\\\\\\\\\\\
-@router.message(UserState.select_date)
-async def select_date(message: Message, state: FSMContext):
+@router.message(UserState.date)
+async def date(message: Message, state: FSMContext):
     try:
         user_id = message.from_user.id
         data = await state.get_data()
         lang = data['language']
-        print(message.text)
+        print(message.text,"keldi")
         if message.text == get_text(lang, "buttons", "back"):
-            barber_id = selected_service[message.text]
-            await state.update_data(selected_service=message.text)
-            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
-            await message.answer(text=get_text(lang, 'message_text', 'optionforservices'),
-                                 reply_markup=await kb.type_of_selected_service(lang, barber_id))
-            await state.set_state(UserState.type_of_selected_service)
+            await state.update_data(barber_name=message.text)
+            barber_tg_id = barber_with_telegramid[message.text]
+            await message.answer(text=get_text(lang, 'message_text', 'service_type'),
+                                 reply_markup=await kb.services(lang, barber_tg_id))
+            await state.set_state(UserState.check_service_type)
 
         if message.text in check_selected_types:
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'select_date'),reply_markup=await kb.date(lang))
-            await state.set_state(UserState.selected_Date)
+            # await state.set_state(UserState.selected_Date)
 
     except Exception as e:
         print(f"Error:{e}")

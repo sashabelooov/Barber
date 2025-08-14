@@ -14,4 +14,4 @@ class UserState(StatesGroup):
     service_type = State()
     check_service_type = State()
     type_of_selected_service = State()
-    select_date = State()
+    date = State()

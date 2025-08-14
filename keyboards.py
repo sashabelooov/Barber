@@ -103,7 +103,7 @@ async def type_of_selected_service(lang, barber_id):
     for i in servicetypes:
         for k,v in i.items():
             if k == "name":
-                keyboard.add(KeyboardButton(text=f'{v}'))
+                keyboard.add(KeyboardButton(text=f'{v.strip()}'))
                 check_selected_types.append(v)
     print(check_selected_types)
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
