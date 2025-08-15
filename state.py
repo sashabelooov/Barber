@@ -15,3 +15,4 @@ class UserState(StatesGroup):
     check_service_type = State()
     type_of_selected_service = State()
     date = State()
+    time = State()

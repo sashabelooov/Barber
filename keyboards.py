@@ -105,7 +105,6 @@ async def type_of_selected_service(lang, barber_id):
             if k == "name":
                 keyboard.add(KeyboardButton(text=f'{v.strip()}'))
                 check_selected_types.append(v)
-    print(check_selected_types)
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
     keyboard.adjust(2,1)
     return keyboard.as_markup(resize_keyboard=True)
