@@ -2,7 +2,7 @@ from aiogram.types import KeyboardButton, InlineKeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 import json
 
-from api import all_barbers_info, user_booking_history, barber_service_type, choosed_service
+from api import *
 
 with open("data.json", "r", encoding="utf-8") as file:
     translations = json.load(file)
@@ -92,9 +92,12 @@ async def services(lang, tg_id):
             if k == 'name':
                 keyboard.add(KeyboardButton(text=f"{v}"))
                 selected_service[i["name"]] = i["id"]
+                selected_service["barber_id"] = i["barber"]
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
     keyboard.adjust(2, 1)
     return keyboard.as_markup(resize_keyboard=True)
+
+
 
 check_selected_types = []
 async def type_of_selected_service(lang, barber_id):
@@ -105,6 +108,7 @@ async def type_of_selected_service(lang, barber_id):
             if k == "name":
                 keyboard.add(KeyboardButton(text=f'{v.strip()}'))
                 check_selected_types.append(v)
+                selected_service["service_id"] = i["id"]
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
     keyboard.adjust(2,1)
     return keyboard.as_markup(resize_keyboard=True)
@@ -117,4 +121,18 @@ async def date(lang):
                  KeyboardButton(text=get_text(lang, 'buttons', 'another_day')))
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
     keyboard.adjust(2,1)
+    return keyboard.as_markup(resize_keyboard=True)
+
+
+
+async def show_time_slots(lang,dates, barber_id, service_id):
+    keyboard = ReplyKeyboardBuilder()
+    time_slots = await get_time_api(dates, barber_id, service_id)
+    time_slots_list = time_slots["available_slots"]
+
+    for i in time_slots_list:
+        keyboard.add(KeyboardButton(text=f"{i}"))
+
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+    keyboard.adjust(3)
     return keyboard.as_markup(resize_keyboard=True)

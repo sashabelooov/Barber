@@ -8,6 +8,7 @@ from aiogram import F
 from aiogram.types import Message
 from aiogram.fsm.state import default_state
 from aiogram.filters import StateFilter
+import datetime
 
 # local modules
 from api import create_user, is_user_exists
@@ -272,12 +273,13 @@ async def check_service_type(message: Message, state: FSMContext):
         data = await state.get_data()
         lang = data['language']
         if message.text == get_text(lang, "buttons", "back"):
-            print(1)
+            selected_service.clear()
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'barber_name'),reply_markup=await kb.barber_name(lang))
             await state.set_state(UserState.barber_name)
         elif message.text in selected_service:
             barber_id = selected_service[message.text]
+            await state.update_data(barber_id=selected_service["barber_id"])
             await state.update_data(selected_service=message.text)
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'optionforservices'), reply_markup=await kb.type_of_selected_service(lang, barber_id))
@@ -286,7 +288,6 @@ async def check_service_type(message: Message, state: FSMContext):
     except Exception as e:
         print(f"Error:{e}")
 
-# backni to'g'rilash kerey
 
 @router.message(UserState.date)
 async def date(message: Message, state: FSMContext):
@@ -295,12 +296,14 @@ async def date(message: Message, state: FSMContext):
         data = await state.get_data()
         lang = data['language']
         if message.text == get_text(lang, "buttons", "back"):
+            check_selected_types.clear()
             barber_tg_id = barber_with_telegramid[data['barber_name']]
             await message.answer(text=get_text(lang, 'message_text', 'service_type'),
                                  reply_markup=await kb.services(lang, barber_tg_id))
             await state.set_state(UserState.check_service_type)
 
         if message.text in check_selected_types:
+            await state.update_data(service_id=selected_service["service_id"])
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'select_date'),reply_markup=await kb.date(lang))
             await state.set_state(UserState.time)
@@ -318,12 +321,21 @@ async def time(message: Message, state: FSMContext):
         user_id = message.from_user.id
         data = await state.get_data()
         lang = data['language']
+
         if message.text == get_text(lang, "buttons", "back"):
             barber_id = selected_service[data['selected_service']]
             await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
             await message.answer(text=get_text(lang, 'message_text', 'optionforservices'),
                                  reply_markup=await kb.type_of_selected_service(lang, barber_id))
             await state.set_state(UserState.date)
+
+        if message.text == get_text(lang, "buttons", "today"):
+            dates = datetime.datetime.today().date()
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'select_time'),
+                                 reply_markup=await kb.show_time_slots(lang, dates, data['barber_id'], data['service_id']))
+            await state.update_data(date=dates)
+            await state.set_state(UserState.check_selected_time)
 
     except Exception as e:
         print(f"Error:{e}")
