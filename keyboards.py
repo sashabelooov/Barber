@@ -1,6 +1,8 @@
 from aiogram.types import KeyboardButton, InlineKeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 import json
+from datetime import datetime, timedelta
+
 
 from api import *
 
@@ -125,6 +127,8 @@ async def date(lang):
 
 
 
+
+time_slot = []
 async def show_time_slots(lang,dates, barber_id, service_id):
     keyboard = ReplyKeyboardBuilder()
     time_slots = await get_time_api(dates, barber_id, service_id)
@@ -132,7 +136,69 @@ async def show_time_slots(lang,dates, barber_id, service_id):
 
     for i in time_slots_list:
         keyboard.add(KeyboardButton(text=f"{i}"))
+        time_slot.append(str(i))
 
     keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
     keyboard.adjust(3)
     return keyboard.as_markup(resize_keyboard=True)
+
+
+
+# Hozirgi kunga asoslangan 30 kunlik sanalar ro'yxatini yaratish
+def get_30_day_range_from_today():
+    # Hozirgi sana
+    today = datetime.now()
+
+    # Hozirgi kunga 1 kun qo'shish
+    start_date = today + timedelta(days=1)
+
+    # 30 kunlik sanalar ro'yxatini yaratish
+    date_list = [(start_date + timedelta(days=i)).strftime("%d-%m-%Y") for i in range(30)]
+
+    return date_list
+
+
+another_day_btn = []
+async def another_day(lang):
+    keyboard = ReplyKeyboardBuilder()
+    dates = get_30_day_range_from_today()
+    for i in dates:
+        another_day_btn.append(i)
+        keyboard.add(KeyboardButton(text=f"{i}"))
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+    keyboard.adjust(2)
+    return keyboard.as_markup(resize_keyboard=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

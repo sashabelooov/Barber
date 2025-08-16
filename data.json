@@ -23,6 +23,7 @@
             "no_booking_history": "Sizda hali buyurtmalar yo'q \uD83E\uDD37\u200D♂\uFE0F",
             "barber_name":"Qaysi sartarosh qabuliga yozilmoqchisiz?\nIltimos sartaroshlardan birin tanlang \uD83D\uDE0A",
             "select_date": "Qaysi kunga sartarosh qabuliga yozlimoqchisiz ?",
+            "another_day": "Iltimos sanani tanlang",
             "select_time": "Qaysi vaqtga sartarosh qabuliga yozilmoqchisiz \uD83D\uDC40",
             "conf_barber_name": "\uD83D\uDCC3 Sartaroshning ismi: ",
             "conf_day": "\uD83D\uDCC6 Sana: ",

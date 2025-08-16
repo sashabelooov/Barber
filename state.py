@@ -17,3 +17,4 @@ class UserState(StatesGroup):
     date = State()
     time = State()
     check_selected_time = State()
+    check_selected_date = State()

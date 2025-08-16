@@ -245,7 +245,7 @@ async def booking_history(message: Message, state: FSMContext):
 
 
 # ////////////////// barber_name \\\\\\\\\\\\\\\\\\\\\\\
-from keyboards import barber_with_telegramid, selected_service, check_selected_types
+from keyboards import barber_with_telegramid, selected_service, check_selected_types, time_slot, another_day_btn
 @router.message(UserState.barber_name)
 async def barber_name(message: Message, state: FSMContext):
     try:
@@ -337,6 +337,64 @@ async def time(message: Message, state: FSMContext):
             await state.update_data(date=dates)
             await state.set_state(UserState.check_selected_time)
 
+
+        #  Boshqa kuni buttonlarini boshqarish
+        if message.text == get_text(lang, "buttons", "another_day"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'another_day'),
+                                 reply_markup=await kb.another_day(lang))
+            await state.set_state(UserState.check_selected_date)
+
     except Exception as e:
         print(f"Error:{e}")
+
+
+
+
+
+
+
+@router.message(UserState.check_selected_time)
+async def check_selected_time(message: Message, state: FSMContext):
+    try:
+        user_id = message.from_user.id
+        data = await state.get_data()
+        lang = data['language']
+        if message.text == get_text(lang, "buttons", "back"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await state.update_data(service_id=selected_service["service_id"])
+            await message.answer(text=get_text(lang, 'message_text', 'select_date'), reply_markup=await kb.date(lang))
+            await state.set_state(UserState.time)
+            time_slot.clear()
+        elif message.text in time_slot:
+            await state.update_data(selected_time=message.text)
+
+    except Exception as e:
+        print(f"Error:{e}")
+
+
+
+@router.message(UserState.check_selected_date)
+async def check_selected_date(message: Message, state: FSMContext):
+    try:
+        user_id = message.from_user.id
+        data = await state.get_data()
+        lang = data['language']
+        if message.text == get_text(lang, "buttons", "back"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'select_date'), reply_markup=await kb.date(lang))
+            await state.set_state(UserState.time)
+
+        if message.text in another_day_btn:
+            await state.update_data(date=message.text)
+            dates = message.text.split("-")
+            new_date = dates[2] + "-" + dates[1] + "-" + dates[0]
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'select_time'),
+                                 reply_markup=await kb.show_time_slots(lang, new_date, data['barber_id'], data['service_id']))
+            await state.set_state(UserState.check_selected_time)
+    except Exception as e:
+        print(f"Error:{e}")
+
+
 
