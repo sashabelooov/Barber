@@ -18,3 +18,5 @@ class UserState(StatesGroup):
     time = State()
     check_selected_time = State()
     check_selected_date = State()
+    price_list = State()
+    show_hair_cut_price = State()

@@ -172,18 +172,22 @@ async def another_day(lang):
 
 
 
+def price_list(lang):
+    keyboard = ReplyKeyboardBuilder()
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'hair')),
+                 KeyboardButton(text=get_text(lang, 'buttons', 'beard')),
+                 KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+    keyboard.adjust(2,1)
+    return keyboard.as_markup(resize_keyboard=True)
 
 
 
-
-
-
-
-
-
-
-
-
+def show_hair_cut_price(lang):
+    keyboard = ReplyKeyboardBuilder()
+    keyboard.add(KeyboardButton(text=get_text(lang, 'buttons', 'booking')),
+                 KeyboardButton(text=get_text(lang, 'buttons', 'back')))
+    keyboard.adjust(1)
+    return keyboard.as_markup(resize_keyboard=True)
 
 
 

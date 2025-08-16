@@ -184,9 +184,77 @@ async def menu_check_button(message: Message, state: FSMContext):
             await state.set_state(UserState.barber_name)
 
 
+        if message.text == get_text(lang, "buttons", "price_list"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'service_type'),
+                                 reply_markup=kb.price_list(lang))
+            await state.set_state(UserState.price_list)
+
+
     except Exception as e:
         print(f"Error:{e}")
 
+
+
+@router.message(UserState.price_list)
+async def price_list(message: Message, state: FSMContext):
+    try:
+        user_id = message.from_user.id
+        data = await state.get_data()
+        lang = data['language']
+        if message.text == get_text(lang, "buttons", "back"):
+            await message.answer(text=get_text(lang, 'message_text', 'menu'), reply_markup=kb.menu(lang))
+            await state.set_state(UserState.menu)
+        elif message.text == get_text(lang, "buttons", "hair"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+
+            msg_text = (
+                f"{get_text(lang, 'message_text', 'show_hair_cut_price')}\n"
+                f"{get_text(lang, 'message_text', 'hair_cut_price_1')}"
+                f"{get_text(lang, 'message_text', 'hair_cut_price_2')}"
+                f"{get_text(lang, 'message_text', 'hair_cut_price_3')}"
+                f"{get_text(lang, 'message_text', 'family_hair_cut')}"
+            )
+            await message.answer(text=msg_text,
+                                 reply_markup=kb.show_hair_cut_price(lang))
+            await state.set_state(UserState.show_hair_cut_price)
+        elif message.text == get_text(lang, "buttons", "beard"):
+            msg_text = (
+                f"{get_text(lang, 'message_text', 'beard')}\n"
+                f"{get_text(lang, 'message_text', 'beard_price_1')}"
+                f"{get_text(lang, 'message_text', 'beard_price_2')}"
+                f"{get_text(lang, 'message_text', 'beard_price_3')}"
+            )
+            await message.answer(text=msg_text,
+                                 reply_markup=kb.show_hair_cut_price(lang))
+            await state.set_state(UserState.show_hair_cut_price)
+
+    except Exception as e:
+        print(f"Error:{e}")
+
+
+
+
+@router.message(UserState.show_hair_cut_price)
+async def show_hair_cut_price(message: Message, state: FSMContext):
+    try:
+        user_id = message.from_user.id
+        data = await state.get_data()
+        lang = data['language']
+        if message.text == get_text(lang, "buttons", "back"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'service_type'),
+                                 reply_markup=kb.price_list(lang))
+            await state.set_state(UserState.price_list)
+
+        elif message.text == get_text(lang, "buttons", "booking"):
+            await bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+            await message.answer(text=get_text(lang, 'message_text', 'barber_name'),
+                                 reply_markup=await kb.barber_name(lang))
+            await state.set_state(UserState.barber_name)
+
+    except Exception as e:
+        print(f"Error:{e}")
 
 
 

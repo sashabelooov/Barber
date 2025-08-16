@@ -32,8 +32,17 @@
             "sana": "Iltimos sanani tanlang",
             "payment": "Iltimos to'lov turini tanlang \uD83D\uDE0A",
             "service_type": "Iltimos xizmat turini tanlang",
-            "optionforservices": "Qaysi hizmat turidan foydalanmoqchisiz?"
-
+            "optionforservices": "Qaysi hizmat turidan foydalanmoqchisiz?",
+            "show_hair_cut_price": "Narxlari ro'yxati \uD83D\uDCB0\n\n \uD83D\uDC87\u200D♂\uFE0F Soch olish (strijka):",
+            "hair_cut_price_1": "100 000 soʻm — soch olish + 1 marta bosh yuvish + kosmetolog maslahati\n",
+            "hair_cut_price_2": "150 000 soʻm — soch olish + 2 marta bosh yuvish + kosmetolog maslahati\n",
+            "hair_cut_price_3": "200 000 soʻm — soch olish + 2 marta bosh yuvish + bosh massaji + soch turmaklash + kosmetolog maslahati\n",
+            "show_hair_cut_price_for_baby": "\uD83D\uDC66 Bolalar uchun soch olish — 100 000 soʻm",
+            "family_hair_cut": "\n\uD83D\uDC68\u200D\uD83D\uDC66 Oilaviy soch olish:\nOta — 150 000 soʻm\n1-o‘g‘il — bepul (bonus)\n2-o‘g‘il — 50% chegirma\n",
+            "beard": "\uD83E\uDDD4\uD83C\uDFFB\u200D♂\uFE0F Soqol parvarishi:\n",
+            "beard_price_1": "Soqolni kalga olish — 50 000 soʻm\n",
+            "beard_price_2": "Soqolga shakl berish (modellash) — 50 000 soʻm\n",
+            "beard_price_3": "Qirollik qirqimi (sochiq va kremlar bilan) — 90 000 soʻm\n"
         },
         "buttons": {
             "contact": "📞 Contactni jo'natish",
@@ -53,8 +62,8 @@
             "ru": "\uD83C\uDDF7\uD83C\uDDFA ru",
             "today": "\uD83D\uDCC5 Bugun",
             "another_day": "\uD83D\uDCCC Boshqa kun",
-            "Click": "\uD83D\uDCB3 Click",
-            "Payme": "\uD83D\uDCB3 Payme"
+            "hair": "\uD83D\uDC87\uD83C\uDFFB\u200D♂\uFE0F Soch olish",
+            "beard": "\uD83E\uDDD4\uD83C\uDFFB\u200D♂\uFE0F Soqol olish"
         }
     },
     "\uD83C\uDDF7\uD83C\uDDFA ru": {
